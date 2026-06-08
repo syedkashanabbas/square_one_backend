@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Square One</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="{{ asset('assets/css/index.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <style>
+        /* Base Theme Settings */
+        *{
+           font-family: "Montserrat", sans-serif;
+        }
+        :root {
+            --bg-black: #000000;
+            --text-white: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-white);
+        
+            font-optical-sizing: auto;
+            font-variation-settings: "wdth" 100;
+        }
+
+        /* Pure CSS Marquee Core Animations */
+        @keyframes marqueeUp {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+
+        @keyframes marqueeDown {
+            0% { transform: translateY(-50%); }
+            100% { transform: translateY(0); }
+        }
+
+        .animate-marquee-up {
+            animation: marqueeUp 24s linear infinite;
+        }
+
+        .animate-marquee-down {
+            animation: marqueeDown 24s linear infinite;
+        }
+
+        /* Hover behavior to pause animation smoothly */
+        .marquee-container:hover .animate-marquee-up,
+        .marquee-container:hover .animate-marquee-down {
+            animation-play-state: paused;
+        }
+
+        /* Hide default scrollbars */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden flex flex-col justify-between relative">
+
+    <div id="demo-modal" class="fixed inset-0 w-full h-screen bg-black/60 backdrop-blur-md z-[1000] hidden items-center justify-center px-4">
+        
+        <div id="modal-card" class="bg-[#fcfdfa] text-black w-full max-w-2xl rounded-3xl p-8 md:p-12 shadow-2xl relative transform translate-y-8 opacity-0">
+            
+            <button id="modal-close-btn" class="absolute top-6 right-6 p-2 text-neutral-400 hover:text-black transition focus:outline-none" aria-label="Close Modal">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <div class="open-demo-trigger text-center mb-10">
+                <h2 class="text-3xl md:text-4xl  tracking-tight text-neutral-900">
+                    Book a demo <span class="font-light italic text-neutral-500">with our experts</span>
+                </h2>
+            </div>
+
+            <form onsubmit="event.preventDefault();" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div class="flex flex-col space-y-1.5">
+                        <label class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase pl-1">Business Email</label>
+                        <input type="email" placeholder="Enter your business email" class="w-full bg-transparent border border-neutral-300 rounded-full px-5 py-3.5 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-black transition" required>
+                    </div>
+
+                    <div class="flex flex-col space-y-1.5">
+                        <label class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase pl-1">Full Name</label>
+                        <input type="text" placeholder="Enter your full name" class="w-full bg-transparent border border-neutral-300 rounded-full px-5 py-3.5 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-black transition" required>
+                    </div>
+
+                    <div class="flex flex-col space-y-1.5">
+                        <label class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase pl-1">Company Size</label>
+                        <div class="relative">
+                            <select class="w-full bg-transparent border border-neutral-300 rounded-full px-5 py-3.5 text-sm text-neutral-500 appearance-none focus:outline-none focus:border-black transition cursor-pointer">
+                                <option value="" disabled selected>Select the size of your company</option>
+                                <option value="1-10">1 - 10 employees</option>
+                                <option value="11-50">11 - 50 employees</option>
+                                <option value="51-200">51 - 200 employees</option>
+                                <option value="201+">201+ employees</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none text-neutral-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col space-y-1.5">
+                        <label class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase pl-1">Company Name</label>
+                        <input type="text" placeholder="Enter your company name" class="w-full bg-transparent border border-neutral-300 rounded-full px-5 py-3.5 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-black transition" required>
+                    </div>
+
+                </div>
+
+                <div class="flex justify-end pt-4">
+                    <button type="submit" class="bg-[#032b24] text-white font-bold px-8 py-3.5 rounded-full text-sm hover:bg-black transition duration-300 shadow-md">
+                        Book a demo
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div id="mobile-menu" class="fixed inset-0 w-full h-screen bg-black z-[999] hidden flex-col justify-between px-8 py-12 lg:hidden">
+        
+        <div class="flex justify-between items-center w-full">
+          <a href="{{ route('home') }}"> <span class="text-2xl font-extrabold tracking-tight text-white">S Q U A R E O N E</span></a> 
+            
+            <button id="menu-close-btn" class="p-2 text-white hover:text-neutral-400 transition focus:outline-none" aria-label="Close Menu">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <nav class="flex flex-col space-y-8 text-4xl font-bold tracking-tight text-left my-auto w-full">
+            <a href="{{ route('services') }}" class="mobile-nav-link text-neutral-200 hover:text-white transition duration-300 flex items-center justify-between group py-2 border-b border-neutral-900">
+                <span>Services</span> <span class="text-2xl text-neutral-500 group-hover:text-white transition">→</span>
+            </a>
+            <a href="{{ route('ourwork') }}" class="mobile-nav-link text-neutral-200 hover:text-white transition duration-300 flex items-center justify-between group py-2 border-b border-neutral-900">
+                <span>Our work</span> <span class="text-2xl text-neutral-500 group-hover:text-white transition">→</span>
+            </a>
+            <a href="{{ route('whyus') }}" class="mobile-nav-link text-neutral-200 hover:text-white transition duration-300 flex items-center justify-between group py-2 border-b border-neutral-900">
+                <span>Why us</span> <span class="text-2xl text-neutral-500 group-hover:text-white transition">→</span>
+            </a>
+            <a href="{{ route('pricing') }}" class="mobile-nav-link text-neutral-200 hover:text-white transition duration-300 flex items-center justify-between group py-2 border-b border-neutral-900">
+                <span>Pricing</span> <span class="text-2xl text-neutral-500 group-hover:text-white transition">→</span>
+            </a>
+        </nav>
+
+        <div class="mobile-nav-footer w-full flex flex-col space-y-4 pt-6 border-t border-neutral-900">
+            <button class="open-demo-trigger w-full bg-white text-black font-extrabold py-4 rounded-full text-center hover:bg-neutral-200 transition duration-300">
+                Book a demo
+            </button>
+           
+        </div>
+    </div>
+
+    <header class="w-full sticky top-0 z-50 px-6 md:px-12 py-6" style="background-color: var(--bg-black);">
+        <div class="max-w-7xl mx-auto flex justify-between items-center w-full gap-4 relative">
+            
+            <div class="text-2xl font-extrabold tracking-tight text-white cursor-pointer shrink-0">
+        <a href="{{ route('home') }}">S Q U A R E  O N E</a> 
+            </div>
+            
+            <nav class="hidden lg:flex items-center space-x-6 xl:space-x-8 text-sm font-medium text-neutral-400 whitespace-nowrap overflow-hidden">
+                <a href="{{ route('services') }}" class="text-white transition duration-200 flex items-center gap-1">Services</a>
+                <a href="{{ route('ourwork') }}" class="hover:text-white transition duration-200">Our work</a>
+                <a href="{{ route('whyus') }}" class="hover:text-white transition duration-200 flex items-center gap-1">Why us </a>
+                <a href="{{ route('pricing') }}" class="hover:text-white hover:text-white transition duration-200">Pricing</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4 shrink-0">
+                
+                <button class="open-demo-trigger hidden sm:inline-block bg-white text-black font-bold px-6 py-2.5 rounded-full text-sm hover:bg-neutral-200 transition duration-300 shadow-md">
+                    Book a demo
+                </button>
+
+                <button id="menu-open-btn" class="lg:hidden flex items-center justify-center p-2 text-white hover:text-neutral-400 transition focus:outline-none z-40" aria-label="Open Menu">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+  
+  <section class="w-full min-h-screen relative flex items-center justify-start py-32 px-6 sm:px-12 lg:px-24 bg-black overflow-hidden">
+    
+    <!-- BACKGROUND IMAGE LAYER -->
+    <div class="absolute inset-0 z-0 select-none pointer-events-none">
+        <img src="{{ asset('assets/img/services_hero.png') }}" 
+             alt="Square One Creative Space Backdrop" 
+             class="w-full h-full object-cover object-center block opacity-60 md:opacity-70">
+        
+        <!-- HIGH-END CINEMATIC GRADIENT OVERLAY (Fixes Contrast and Readability) -->
+        <!-- Left side heavy black for solid text contrast, fading smoothly to dark transparency on the right -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/20 lg:from-black lg:via-black/70 lg:to-transparent"></div>
+        <!-- Bottom vignette to bleed smoothly into the next section -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+    </div>
+
+    <!-- CONTENT LAYER (Z-20 keeps it safely on top of overlays) -->
+    <div class="w-full max-w-4xl relative z-20 text-left space-y-6">
+        
+        <!-- Kicker -->
+        <div class="text-[#ccf799] text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase pl-0.5">
+            Creative Services
+        </div>
+
+        <div class="space-y-6">
+            <!-- Heading (Tweaked with font-light & custom italic for Square One signature feel) -->
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl xl:text-[80px] font-light tracking-tight text-white leading-[1.05] max-w-3xl">
+                Design services for <br class="hidden sm:inline"><span class="italic font-serif text-zinc-300">ambitious brands</span>
+            </h1>
+            
+            <!-- Paragraph (Shifted from full white to zinc-300 for premium editorial balance) -->
+            <p class="text-lg sm:text-xl text-zinc-300 font-normal leading-relaxed max-w-2xl">
+                Teams at fast-growing companies use Square One to get quality graphic design done at scale. Book a call today and get access to your dedicated design team.
+            </p>
+        </div>
+
+        <!-- Action Module -->
+        <div class="pt-4">
+            <button class="open-demo-trigger inline-flex items-center justify-center bg-[#ccf799] text-black font-bold px-8 py-4 rounded-full text-sm sm:text-base hover:bg-[#bfe68a] transition-all duration-300 shadow-xl tracking-wide transform hover:-translate-y-0.5">
+                Book a demo
+            </button>
+        </div>
+
+    </div>
+</section>
+<!-- START: SQUARE ONE SERVICES DETAIL DEEP-DIVE SPLIT SECTION -->
+<section class="w-full bg-white text-neutral-900 py-16 md:py-28 overflow-hidden font-sans select-none">
+    <div class="max-w-7xl mx-auto flex flex-col space-y-24 md:space-y-40">
+
+        <!-- BLOCK 01: DESIGN & CODE ENGINEERING (TEXT LEFT / IMAGE RIGHT) -->
+        <div class="px-6 md:px-12 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            
+            <div class="lg:col-span-6 flex flex-col justify-center pt-2">
+                <div class="w-full mb-6">
+                    <span class="text-xs md:text-sm font-semibold tracking-[0.15em] uppercase text-neutral-500 block pb-3">
+                        Design & Code Infrastructure
+                    </span>
+                    <div class="w-full h-[1px] bg-neutral-300"></div>
+                </div>
+
+                <h2 class="text-4xl sm:text-5xl md:text-[56px] leading-[1.08] tracking-tight text-neutral-900 mb-8">
+                    High-end digital assets.<br>
+                    <span class="italic font-serif font-light text-neutral-800">Production-ready design,</span> built to scale your infrastructure.
+                </h2>
+
+                <h3 class="text-xl md:text-2xl leading-relaxed text-neutral-800 max-w-xl mb-6">
+                    What happens when premium aesthetics meet native code engineering?
+                </h3>
+
+                <p class="text-neutral-600 text-sm md:text-base leading-relaxed max-w-xl mb-10">
+                    From hyper-clean responsive web layouts and multi-platform mobile app development to cinematic video structures and absolute on-model graphic assets. We deploy comprehensive visual ecosystems that protect your brand identity across every screen size.
+                </p>
+
+                <div class="open-demo-trigger flex items-center">
+                    <a href="#" class="inline-block bg-[#02231c] text-white text-sm font-bold tracking-wide px-8 py-4 rounded-full transition-all duration-300 hover:bg-[#043b2f] hover:shadow-lg transform hover:-translate-y-0.5">
+                        Explore our workflow
+                    </a>
+                </div>
+            </div>
+
+            <div class="lg:col-span-6 w-full flex justify-center lg:justify-end items-center">
+                <div class="w-full max-w-[540px] aspect-[3/4] rounded-lg overflow-hidden bg-neutral-100 shadow-xl">
+                    <img src="{{ asset('assets/img/services2.png') }}" alt="Square One design and development workspace showcase" class="w-full h-full object-cover object-center rounded-lg pointer-events-none">
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BLOCK 02: MARKETING, AI AUTOMATION & INTELLIGENCE (IMAGE LEFT / TEXT RIGHT) -->
+        <div class="px-6 md:px-12 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            
+            <div class="lg:col-span-6 w-full flex justify-center lg:justify-start items-center order-2 lg:order-1">
+                <div class="w-full max-w-[560px] aspect-[16/10] bg-neutral-900 rounded-2xl overflow-hidden shadow-2xl relative">
+                    <img src="{{ asset('assets/img/services1.png') }}" alt="Square One design and development workspace showcase" class="w-full h-full object-cover object-center rounded-lg pointer-events-none">
+                    
+                    <div class="absolute inset-0 bg-black/5 pointer-events-none"></div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-6 flex flex-col justify-center pt-2 order-1 lg:order-2">
+                <div class="w-full mb-6">
+                    <span class="text-xs md:text-sm font-semibold tracking-[0.15em] uppercase text-neutral-500 block pb-3">
+                        Intelligence & Performance Scaling
+                    </span>
+                    <div class="w-full h-[1px] bg-neutral-300"></div>
+                </div>
+
+                <h2 class="text-4xl sm:text-5xl md:text-[54px] leading-[1.1] tracking-tight text-neutral-900 mb-8">
+                    Data-driven acquisition met by <span class="italic font-serif font-light text-neutral-800">intelligent automation pipelines.</span>
+                </h2>
+
+                <h3 class="text-xl md:text-2xl font-medium leading-snug text-neutral-800 max-w-xl mb-6">
+                    Square One builds advanced growth matrices, custom AI agent nodes, and meticulous academic knowledge maps.
+                </h3>
+
+                <p class="text-neutral-600 text-sm md:text-base leading-relaxed max-w-xl mb-10">
+                    We eliminate operational lag by embedding specialized AI automation layers directly into your active marketing funnels and research stacks. The result is structured conversion models, cleaner data operations, and rapid deployment frameworks that perform around the clock.
+                </p>
+
+                <div class="flex items-center">
+                    <a href="#" class="open-demo-trigger inline-block bg-[#02231c] text-white text-sm font-bold tracking-wide px-8 py-4 rounded-full transition-all duration-300 hover:bg-[#043b2f] hover:shadow-lg transform hover:-translate-y-0.5">
+                        Build your pipeline
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<!-- END: SQUARE ONE SERVICES DETAIL DEEP-DIVE SPLIT SECTION -->
+
+<!-- START: PREMIUM DARK GRADIENT BENTO GRID (CUSTOM SERVICES MATRICES) -->
+<section class="w-full bg-black text-white py-16 px-6 sm:px-12 lg:px-24 border-t border-white/10 overflow-hidden select-none">
+    <div class="max-w-7xl mx-auto space-y-10">
+        
+        <!-- HEADER MODULE: PREMIUM DARK ARCHITECTURE -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div class="space-y-2">
+                <span class="text-xs font-bold tracking-[0.25em] uppercase text-[#ccf799] block">Our Offerings</span>
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight text-white leading-none max-w-2xl">
+                    High-impact services <br><span class="italic font-serif text-zinc-400">built to scale operations</span>
+                </h2>
+            </div>
+            <div>
+                <a href="#" class="inline-flex items-center justify-center border border-white/20 text-white hover:text-black hover:bg-[#ccf799] hover:border-[#ccf799] px-6 py-3 rounded-full text-sm font-medium tracking-wide transition-all duration-300 shrink-0">
+                    Explore all capabilities
+                </a>
+            </div>
+        </div>
+
+        <!-- 12-COLUMN INTERACTIVE FLAT BENTO GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+            
+            <!-- ==================== ROW 1 ==================== -->
+
+            <!-- CARD 01: HORIZONTAL RECTANGLE (WebDesign / Dev) -->
+            <div class="md:col-span-6 group flex flex-col justify-between rounded-lg p-6 overflow-hidden relative min-h-[300px] md:h-[320px] shadow-none border border-white/5 bg-zinc-900/40 cursor-pointer">
+                <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale-[40%] group-hover:grayscale-0 opacity-80">
+                    <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=1200&auto=format&fit=crop" alt="WebDesign & Frontend Dev Pipeline" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                </div>
+                <div class="flex justify-between items-start relative z-10">
+                    <span class="text-xs font-mono text-zinc-400 tracking-wider">01 // CORE INFRASTRUCTURE</span>
+                    <div class="w-1.5 h-1.5 rounded-full bg-[#ccf799] animate-pulse"></div>
+                </div>
+                <div class="space-y-2 relative z-10 mt-auto text-white">
+                    <h3 class="text-xl sm:text-2xl font-light tracking-tight group-hover:text-[#ccf799] transition-colors duration-300">WebDesign & Dev</h3>
+                    <p class="text-xs sm:text-sm text-zinc-300 max-w-md font-light leading-relaxed">
+                        High-end premium UI/UX design components paired with fast frontend Next.js stacks and clean fluid Tailwind deployments.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CARD 02: SQUARE 1 (Graphic Design) -->
+            <div class="md:col-span-3 group flex flex-col justify-between rounded-lg p-6 overflow-hidden relative min-h-[300px] md:h-[320px] shadow-none border border-white/5 bg-zinc-900/40 cursor-pointer">
+                <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale-[40%] group-hover:grayscale-0 opacity-70">
+                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=600&auto=format&fit=crop" alt="Graphic Design Creative Space" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                </div>
+                <span class="text-xs font-mono text-zinc-400 tracking-wider relative z-10">02 // VISUAL ASSETS</span>
+                <div class="space-y-1 relative z-10 mt-auto text-white">
+                    <h3 class="text-lg sm:text-xl font-light tracking-tight group-hover:text-[#ccf799] transition-colors duration-300">Graphic Design</h3>
+                    <p class="text-xs text-zinc-300 font-light leading-relaxed">
+                        Logo systems, asset vectors, typography structures, and complete corporate identity frameworks.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CARD 03: SQUARE 2 (Video Editing) -->
+            <div class="md:col-span-3 group flex flex-col justify-between rounded-lg p-6 overflow-hidden relative min-h-[300px] md:h-[320px] shadow-none border border-white/5 bg-zinc-900/40 cursor-pointer">
+                <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale-[40%] group-hover:grayscale-0 opacity-70">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop" alt="Video Editing Nodes" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                </div>
+                <span class="text-xs font-mono text-zinc-400 tracking-wider relative z-10">03 // MOTION MEDIA</span>
+                <div class="space-y-1 relative z-10 mt-auto text-white">
+                    <h3 class="text-lg sm:text-xl font-light tracking-tight group-hover:text-[#ccf799] transition-colors duration-300">Video Editing</h3>
+                    <p class="text-xs text-zinc-300 font-light leading-relaxed">
+                        Cinematic cuts, high-impact explainer dynamics, motion graphics, and premium post-production cycles.
+                    </p>
+                </div>
+            </div>
+
+            <!-- ==================== ROW 2 ==================== -->
+
+            <!-- CARD 04: SQUARE 3 (App Development) -->
+            <div class="md:col-span-3 group flex flex-col justify-between rounded-lg p-6 overflow-hidden relative min-h-[300px] md:h-[320px] shadow-none border border-white/5 bg-zinc-900/40 cursor-pointer">
+                <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale-[40%] group-hover:grayscale-0 opacity-70">
+                    <img src="https://images.unsplash.com/photo-1607799279861-4dd421887fb3?q=80&w=600&auto=format&fit=crop" alt="App Development Engineering" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                </div>
+                <span class="text-xs font-mono text-zinc-400 tracking-wider relative z-10">04 // MOBILE LAYER</span>
+                <div class="space-y-1 relative z-10 mt-auto text-white">
+                    <h3 class="text-lg sm:text-xl font-light tracking-tight group-hover:text-[#ccf799] transition-colors duration-300">App Development</h3>
+                    <p class="text-xs text-zinc-300 font-light leading-relaxed">
+                        Native and cross-platform architecture built cleanly for maximum runtime speed and performance.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CARD 05: SQUARE 4 (AI Automation) -->
+            <div class="md:col-span-3 group flex flex-col justify-between rounded-lg p-6 overflow-hidden relative min-h-[300px] md:h-[320px] shadow-none border border-white/5 bg-zinc-900/40 cursor-pointer">
+                <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale-[40%] group-hover:grayscale-0 opacity-70">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop" alt="AI Automation Intelligence" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                </div>
+                <span class="text-xs font-mono text-zinc-400 tracking-wider relative z-10">05 // INTELLIGENCE</span>
+                <div class="space-y-1 relative z-10 mt-auto text-white">
+                    <h3 class="text-lg sm:text-xl font-light tracking-tight group-hover:text-[#ccf799] transition-colors duration-300">AI Automation</h3>
+                    <p class="text-xs text-zinc-300 font-light leading-relaxed">
+                        Intelligent workflows, autonomous execution nodes, and secure system automation integrations.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CARD 06: HORIZONTAL RECTANGLE (Marketing) -->
+            <div class="md:col-span-6 group flex flex-col justify-between rounded-lg p-6 overflow-hidden relative min-h-[300px] md:h-[320px] shadow-none border border-white/5 bg-zinc-900/40 cursor-pointer">
+                <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale-[40%] group-hover:grayscale-0 opacity-80">
+                    <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=600&auto=format&fit=crop" alt="High Scale Marketing Engine" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                </div>
+                <div class="flex justify-between items-start relative z-10">
+                    <span class="text-xs font-mono text-zinc-400 tracking-wider">06 // SCALING SYSTEMS</span>
+                    <div class="px-2.5 py-0.5 rounded-full border border-white/20 text-white text-[10px] font-medium tracking-wide bg-white/5 uppercase">Performance Live</div>
+                </div>
+                <div class="space-y-2 relative z-10 mt-auto text-white">
+                    <h3 class="text-xl sm:text-2xl font-light tracking-tight group-hover:text-[#ccf799] transition-colors duration-300">Marketing</h3>
+                    <p class="text-xs sm:text-sm text-zinc-300 max-w-md font-light leading-relaxed">
+                        High-scale asset libraries, growth strategy funnels, execution variance tracking, and ad delivery matrix variations.
+                    </p>
+                </div>
+            </div>
+
+            <!-- ==================== ROW 3: CONTINUOUS SYSTEM BLOCK ==================== -->
+
+            <!-- CARD 07: FULL HORIZONTAL RECTANGLE (Academics) -->
+            <div class="md:col-span-12 group flex flex-col justify-between rounded-lg p-6 overflow-hidden relative min-h-[260px] md:h-[280px] shadow-none border border-white/5 bg-zinc-900/40 cursor-pointer">
+                <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale-[40%] group-hover:grayscale-0 opacity-80">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop" alt="Academics & Research Architecture" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                </div>
+                <div class="flex justify-between items-start relative z-10">
+                    <span class="text-xs font-mono text-zinc-400 tracking-wider">07 // EDUCATION KNOWLEDGE BASE</span>
+                    <div class="px-2.5 py-0.5 rounded-full border border-[#ccf799]/30 text-[#ccf799] text-[10px] font-medium tracking-wide bg-[#ccf799]/5 uppercase">Research Focus</div>
+                </div>
+                <div class="space-y-2 relative z-10 mt-auto text-white max-w-xl">
+                    <h3 class="text-2xl sm:text-3xl font-light tracking-tight group-hover:text-[#ccf799] transition-colors duration-300">Academics</h3>
+                    <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                        Custom educational tooling setups, platform resources, data models, and structured research pipelines tailored for continuous development.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<!-- START: HIGH-END CINEMATIC ANIMATED SERVICES BREAKOUT SECTION -->
+<section id="animated-breakout-container" class="w-full bg-black text-white py-16 px-6 sm:px-12 lg:px-24 select-none overflow-hidden" style="perspective: 1200px;">
+    <div class="max-w-7xl mx-auto space-y-20">
+
+        <!-- ==================== BREAKOUT MODULE 01: WEB DESIGN & DEV ==================== -->
+        <div class="service-module-row space-y-6">
+            <div class="service-header flex items-center space-x-4 opacity-0">
+                <span class="text-xs font-mono text-[#ccf799] tracking-widest">01 // VISUAL CODE</span>
+                <div class="h-px bg-white/10 flex-1"></div>
+                <h2 class="text-2xl sm:text-3xl font-light tracking-tight text-white">WebDesign & Dev <span class="italic font-serif text-zinc-400">breakdown</span></h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="service-card group relative flex flex-col justify-between rounded-lg p-8 overflow-hidden min-h-[280px] md:h-[320px] bg-zinc-900/40 cursor-pointer opacity-0 will-change-transform">
+                    <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 opacity-60">
+                        <img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800&auto=format&fit=crop" alt="UI UX Ecosystems" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20"></div>
+                    </div>
+                    <div class="relative z-10 space-y-2 max-w-md mt-auto">
+                        <h3 class="text-xl sm:text-2xl font-light tracking-tight text-white group-hover:text-[#ccf799] transition-colors">Premium UI/UX Core</h3>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                            We architecture heavy design files, robust component libraries, and hyper-mapped conversion mockups tailored perfectly inside Figma before engineering.
+                        </p>
+                        <div class="pt-4 flex items-center space-x-1.5 text-xs text-[#ccf799] font-medium tracking-wider uppercase opacity-80 group-hover:opacity-100 transition-opacity">
+                            <span>Learn more</span><span class="transform group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform text-sm">↗</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-card group relative flex flex-col justify-between rounded-lg p-8 overflow-hidden min-h-[280px] md:h-[320px] bg-zinc-900/40 cursor-pointer opacity-0 will-change-transform">
+                    <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 opacity-60">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop" alt="Next.js Systems" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20"></div>
+                    </div>
+                    <div class="relative z-10 space-y-2 max-w-md mt-auto">
+                        <h3 class="text-xl sm:text-2xl font-light tracking-tight text-white group-hover:text-[#ccf799] transition-colors">Fluid Frontend Systems</h3>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                            Deploying highly-responsive, SEO-optimized structures natively built inside Next.js and pure server-side rendered Tailwind setups.
+                        </p>
+                        <div class="pt-4 flex items-center space-x-1.5 text-xs text-[#ccf799] font-medium tracking-wider uppercase opacity-80 group-hover:opacity-100 transition-opacity">
+                            <span>Learn more</span><span class="transform group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform text-sm">↗</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== BREAKOUT MODULE 02: GRAPHIC DESIGN & VIDEO EDITING ==================== -->
+        <div class="service-module-row space-y-6">
+            <div class="service-header flex items-center space-x-4 opacity-0">
+                <span class="text-xs font-mono text-[#ccf799] tracking-widest">02 // ASSET STUDIO</span>
+                <div class="h-px bg-white/10 flex-1"></div>
+                <h2 class="text-2xl sm:text-3xl font-light tracking-tight text-white">Design & Motion <span class="italic font-serif text-zinc-400">breakdown</span></h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="service-card group relative flex flex-col justify-between rounded-lg p-8 overflow-hidden min-h-[280px] md:h-[320px] bg-zinc-900/40 cursor-pointer opacity-0 will-change-transform">
+                    <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 opacity-60">
+                        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=800&auto=format&fit=crop" alt="Graphic Vectors" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20"></div>
+                    </div>
+                    <div class="relative z-10 space-y-2 max-w-md mt-auto">
+                        <h3 class="text-xl sm:text-2xl font-light tracking-tight text-white group-hover:text-[#ccf799] transition-colors">Graphic Design Architecture</h3>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                            Logo system matrices, custom asset vectors, packaging structures, and comprehensive identity tokens built to lock deep brand retention.
+                        </p>
+                        <div class="pt-4 flex items-center space-x-1.5 text-xs text-[#ccf799] font-medium tracking-wider uppercase opacity-80 group-hover:opacity-100 transition-opacity">
+                            <span>Learn more</span><span class="transform group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform text-sm">↗</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-card group relative flex flex-col justify-between rounded-lg p-8 overflow-hidden min-h-[280px] md:h-[320px] bg-zinc-900/40 cursor-pointer opacity-0 will-change-transform">
+                    <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 opacity-60">
+                        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop" alt="Video Timeline" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20"></div>
+                    </div>
+                    <div class="relative z-10 space-y-2 max-w-md mt-auto">
+                        <h3 class="text-xl sm:text-2xl font-light tracking-tight text-white group-hover:text-[#ccf799] transition-colors">High-Impact Video Editing</h3>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                            Premium rhythmic cuts, audio restoration layouts, pacing corrections, and dynamic motion graphics designed for scaling continuous user attention.
+                        </p>
+                        <div class="pt-4 flex items-center space-x-1.5 text-xs text-[#ccf799] font-medium tracking-wider uppercase opacity-80 group-hover:opacity-100 transition-opacity">
+                            <span>Learn more</span><span class="transform group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform text-sm">↗</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== BREAKOUT MODULE 03: APP DEVELOPMENT & AI AUTOMATION ==================== -->
+        <div class="service-module-row space-y-6">
+            <div class="service-header flex items-center space-x-4 opacity-0">
+                <span class="text-xs font-mono text-[#ccf799] tracking-widest">03 // FUTURES & CODE</span>
+                <div class="h-px bg-white/10 flex-1"></div>
+                <h2 class="text-2xl sm:text-3xl font-light tracking-tight text-white">App Dev & AI <span class="italic font-serif text-zinc-400">breakdown</span></h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="service-card group relative flex flex-col justify-between rounded-lg p-8 overflow-hidden min-h-[280px] md:h-[320px] bg-zinc-900/40 cursor-pointer opacity-0 will-change-transform">
+                    <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 opacity-60">
+                        <img src="https://images.unsplash.com/photo-1607799279861-4dd421887fb3?q=80&w=800&auto=format&fit=crop" alt="Mobile Apps Development" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20"></div>
+                    </div>
+                    <div class="relative z-10 space-y-2 max-w-md mt-auto">
+                        <h3 class="text-xl sm:text-2xl font-light tracking-tight text-white group-hover:text-[#ccf799] transition-colors">Native App Development</h3>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                            Building production-grade Android/iOS mobile environments with fast load structures and bulletproof asset token parameters.
+                        </p>
+                        <div class="pt-4 flex items-center space-x-1.5 text-xs text-[#ccf799] font-medium tracking-wider uppercase opacity-80 group-hover:opacity-100 transition-opacity">
+                            <span>Learn more</span><span class="transform group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform text-sm">↗</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-card group relative flex flex-col justify-between rounded-lg p-8 overflow-hidden min-h-[280px] md:h-[320px] bg-zinc-900/40 cursor-pointer opacity-0 will-change-transform">
+                    <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 opacity-60">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" alt="AI Agent Matrix" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20"></div>
+                    </div>
+                    <div class="relative z-10 space-y-2 max-w-md mt-auto">
+                        <h3 class="text-xl sm:text-2xl font-light tracking-tight text-white group-hover:text-[#ccf799] transition-colors">Advanced AI Automation</h3>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                            Engineering secure server automation layers and autonomous neural nodes to shift execution cycles into complete autopilot arrays.
+                        </p>
+                        <div class="pt-4 flex items-center space-x-1.5 text-xs text-[#ccf799] font-medium tracking-wider uppercase opacity-80 group-hover:opacity-100 transition-opacity">
+                            <span>Learn more</span><span class="transform group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform text-sm">↗</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== BREAKOUT MODULE 04: MARKETING & ACADEMICS ==================== -->
+        <div class="service-module-row space-y-6">
+            <div class="service-header flex items-center space-x-4 opacity-0">
+                <span class="text-xs font-mono text-[#ccf799] tracking-widest">04 // EXPANSION & GROWTH</span>
+                <div class="h-px bg-white/10 flex-1"></div>
+                <h2 class="text-2xl sm:text-3xl font-light tracking-tight text-white">Marketing & Academics <span class="italic font-serif text-zinc-400">breakdown</span></h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="service-card group relative flex flex-col justify-between rounded-lg p-8 overflow-hidden min-h-[280px] md:h-[320px] bg-zinc-900/40 cursor-pointer opacity-0 will-change-transform">
+                    <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 opacity-60">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=800&auto=format&fit=crop" alt="Marketing Infrastructure" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20"></div>
+                    </div>
+                    <div class="relative z-10 space-y-2 max-w-md mt-auto">
+                        <h3 class="text-xl sm:text-2xl font-light tracking-tight text-white group-hover:text-[#ccf799] transition-colors">Growth Marketing Engine</h3>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                            Structuring algorithmic multi-channel ad matrices, scale testing frameworks, and tactical creative optimization assets.
+                        </p>
+                        <div class="pt-4 flex items-center space-x-1.5 text-xs text-[#ccf799] font-medium tracking-wider uppercase opacity-80 group-hover:opacity-100 transition-opacity">
+                            <span>Learn more</span><span class="transform group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform text-sm">↗</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-card group relative flex flex-col justify-between rounded-lg p-8 overflow-hidden min-h-[280px] md:h-[320px] bg-zinc-900/40 cursor-pointer opacity-0 will-change-transform">
+                    <div class="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105 opacity-60">
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop" alt="Academic System Structures" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20"></div>
+                    </div>
+                    <div class="relative z-10 space-y-2 max-w-md mt-auto">
+                        <h3 class="text-xl sm:text-2xl font-light tracking-tight text-white group-hover:text-[#ccf799] transition-colors">Academic Systems</h3>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                            Developing institutional training pipelines, curated structural asset resources, and deep documentation systems.
+                        </p>
+                        <div class="pt-4 flex items-center space-x-1.5 text-xs text-[#ccf799] font-medium tracking-wider uppercase opacity-80 group-hover:opacity-100 transition-opacity">
+                            <span>Learn more</span><span class="transform group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform text-sm">↗</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ENGINE SCRIPT: HIGH RETENTION SCROLL TRIGGER EXECUTION -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Register ScrollTrigger Plugin securely
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Loop through each distinct service block layer
+        const rows = document.querySelectorAll('.service-module-row');
+
+        rows.forEach((row) => {
+            const header = row.querySelector('.service-header');
+            const cards = row.querySelectorAll('.service-card');
+
+            // 1. Header Line Fade-In Matrix (Shifts right elegantly)
+            gsap.fromTo(header, 
+                { opacity: 0, x: -30 },
+                { 
+                    opacity: 1, 
+                    x: 0, 
+                    duration: 0.8, 
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: row,
+                        start: "top 85%", // Triggers slightly before entry
+                        toggleActions: "play none none none"
+                    }
+                }
+            );
+
+            // 2. Parallel Cards Cinematic Entry (Reveals upwards with subtle perspective distortion)
+            gsap.fromTo(cards, 
+                { 
+                    opacity: 0, 
+                    y: 70, 
+                    rotationX: -12,
+                    scale: 0.96 
+                },
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    rotationX: 0,
+                    scale: 1,
+                    duration: 1.1, 
+                    stagger: 0.22, // High-end continuous sequence delay
+                    ease: "power4.out",
+                    scrollTrigger: {
+                        trigger: row,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    }
+                }
+            );
+        });
+    });
+</script>
+
+
+<section class="w-full bg-black text-white py-24 md:py-36 overflow-hidden font-sans relative select-none">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 space-y-36 md:space-y-48">
+        
+        <!-- PART 1: HIGH-END WIDE GRID SPLIT (MODIFIED FOR WHITESPACE) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            
+            <!-- LEFT COLUMN: WIDE TYPOGRAPHY ARCHITECTURE (2-LINE HEADING FOCUS) -->
+            <div class="lg:col-span-7 flex flex-col justify-center space-y-8">
+                
+                <!-- Expanded 2-Line Heading with Global Breathing Room -->
+                <h2 class="text-4xl sm:text-5xl lg:text-[58px] leading-[1.1] tracking-tight font-light text-white max-w-2xl">
+                    <span class="italic font-serif text-zinc-300">Better rates</span> than hiring <br class="hidden sm:inline">designers in-house
+                </h2>
+
+                <!-- Premium High-Comfort Paragraph -->
+                <p class="text-xl md:text-2xl leading-relaxed text-zinc-300 font-normal max-w-xl">
+                    Between the cost of hiring, retaining, supporting and growing the careers of designers and creatives, it ends up being <span class="italic font-serif text-white">a lot of money.</span>
+                </p>
+
+                <!-- Clean Editorial Description -->
+                <p class="text-zinc-500 text-sm md:text-base leading-relaxed max-w-lg font-light">
+                    Superside is 20x faster than hiring internally and about half the cost of traditional design agencies. Our people are continuously trained on all the latest tools and processes, so you don't have to be.
+                </p>
+
+                <!-- Action Module -->
+                <div class="pt-4 flex items-center">
+                    <a href="#" class="open-demo-trigger inline-block bg-[#ccf799] text-black text-sm font-bold tracking-wide px-8 py-4 rounded-full transition-all duration-300 hover:bg-[#bfe68a] hover:shadow-xl transform hover:-translate-y-0.5">
+                        Book a demo
+                    </a>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: PUSHED TO THE FAR RIGHT BY COL-SPAN ADJUSTMENT -->
+            <div class="lg:col-span-5 w-full flex justify-center lg:justify-end items-center lg:pl-12">
+                <div class="w-full max-w-[460px] aspect-[4/5] bg-zinc-900 rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative">
+                    <!-- Your exact high-end Unsplash image asset -->
+                    <img 
+                        src="https://images.unsplash.com/photo-1780328766286-23e6cb082cb9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                        alt="Square One premium design execution workspace asset" 
+                        class="w-full h-full object-cover object-center pointer-events-none transform scale-100 hover:scale-105 transition-transform duration-700 ease-out"
+                    >
+                    <!-- Soft high-end ambient dark layer overlay -->
+                    <div class="absolute inset-0 bg-black/10 pointer-events-none"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- AMBIENT MATRIX LINE -->
+        <div class="w-full border-t border-white/10"></div>
+
+        <!-- PART 2: SUCCESS IN NUMBERS (ROI MATRIX) -->
+        <div id="roi-trigger-element" class="w-full">
+            
+            <div class="w-full text-center max-w-2xl mx-auto mb-20 md:mb-28">
+                <span class="text-xs md:text-sm font-semibold tracking-[0.25em] uppercase text-neutral-500 block mb-4">
+                    Success In Numbers
+                </span>
+                <h3 class="text-3xl sm:text-4xl md:text-[46px] leading-[1.15] tracking-tight font-normal text-white">
+                    The best return on <br><span class="italic font-serif font-light text-neutral-400">your investment</span>
+                </h3>
+            </div>
+
+            <!-- Balanced Count Grid Layout with Luxury Width Padding -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-16 items-start">
+                
+                <!-- Counter Node 01 -->
+                <div class="flex flex-col space-y-4 pb-10 border-b border-white/10">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+                        <p class="text-sm md:text-base text-neutral-400 max-w-xs leading-relaxed order-2 sm:order-1">
+                            Startup, enterprises and mid-market companies trust our network to deliver pixel-perfect creative, at scale.
+                        </p>
+                        <div class="text-6xl sm:text-7xl md:text-[80px] font-extralight tracking-tighter text-white font-sans order-1 sm:order-2 flex items-center leading-none">
+                            <span class="gsap-counter" data-target="500">0</span>+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Counter Node 02 -->
+                <div class="flex flex-col space-y-4 pb-10 border-b border-white/10">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+                        <p class="text-sm md:text-base text-neutral-400 max-w-xs leading-relaxed order-2 sm:order-1">
+                            AI-powered projects delivered with ~35% more efficiency across teams.
+                        </p>
+                        <div class="text-6xl sm:text-7xl md:text-[80px] font-extralight tracking-tighter text-white font-sans order-1 sm:order-2 flex items-center leading-none">
+                            <span class="gsap-counter" data-target="12">0</span>k+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Counter Node 03 -->
+                <div class="flex flex-col space-y-4 pb-10 border-b border-white/10 md:border-none">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+                        <p class="text-sm md:text-base text-neutral-400 max-w-xs leading-relaxed order-2 sm:order-1">
+                            Brands see a three-year ROI of 94% on their corporate subscription model.<br>
+                            <a href="#" class="text-xs text-white hover:text-[#ccf799] underline transition mt-3 inline-block font-medium tracking-wide">Read more in the Forrester TEI report ↗</a>
+                        </p>
+                        <div class="text-6xl sm:text-7xl md:text-[80px] font-extralight tracking-tighter text-white font-sans order-1 sm:order-2 flex items-center leading-none">
+                            <span class="gsap-counter" data-target="94">0</span>%
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Counter Node 04 -->
+                <div class="flex flex-col space-y-4 pb-10 md:pb-0">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+                        <p class="text-sm md:text-base text-neutral-400 max-w-xs leading-relaxed order-2 sm:order-1">
+                            Brands see a 6-month payback period on their custom service tiers.<br>
+                            <a href="#" class="text-xs text-white hover:text-[#ccf799] underline transition mt-3 inline-block font-medium tracking-wide">Read more in the Forrester TEI report ↗</a>
+                        </p>
+                        <div class="text-6xl sm:text-7xl md:text-[80px] font-extralight tracking-tighter text-white font-sans order-1 sm:order-2 flex items-center whitespace-nowrap leading-none">
+                            <span class="gsap-counter" data-target="6">0</span>&nbsp;<span class="text-3xl font-light text-neutral-500 tracking-normal">mo</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+<!-- START: INVERTED LUXURY SPLIT (IMAGE LEFT / TEXT RIGHT) - PLACED AFTER ROI MATRIX -->
+<div class="w-full border-t border-white/10 my-24 md:my-36"></div>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center pb-12">
+    
+    <!-- LEFT COLUMN: IMAGE ASSET (SAME ASPECT RATIO, PRECISELY ALIGNED LEFT) -->
+    <div class="lg:col-span-5 w-full flex justify-center lg:justify-start items-center lg:pr-12 order-2 lg:order-1">
+        <div class="w-full max-w-[460px] aspect-[4/5] bg-zinc-900 rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative">
+            <!-- Your exact high-end keyboard/workspace Unsplash asset -->
+            <img 
+                src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                alt="Square One premium engineering hardware asset" 
+                class="w-full h-full object-cover object-center pointer-events-none transform scale-100 hover:scale-105 transition-transform duration-700 ease-out"
+            >
+            <!-- Ambient premium dark layer overlay -->
+            <div class="absolute inset-0 bg-black/10 pointer-events-none"></div>
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN: OPEN TYPOGRAPHY ARCHITECTURE (SHIFTED RIGHT) -->
+    <div class="lg:col-span-7 flex flex-col justify-center space-y-8 order-1 lg:order-2">
+        
+        <!-- Expanded 2-Line Inverse Heading -->
+        <h2 class="text-4xl sm:text-5xl lg:text-[58px] leading-[1.1] tracking-tight font-light text-white max-w-2xl">
+            Streamlined pipelines <br class="hidden sm:inline">built for <span class="italic font-serif text-zinc-300">unmatched speed</span>
+        </h2>
+
+        <!-- Premium High-Comfort Paragraph -->
+        <p class="text-xl md:text-2xl leading-relaxed text-zinc-300 font-normal max-w-xl">
+            By embedding dedicated engineering nodes directly into your operations, we eliminate traditional friction points so your product evolves <span class="italic font-serif text-white">much faster.</span>
+        </p>
+
+        <!-- Clean Editorial Description -->
+        <p class="text-zinc-500 text-sm md:text-base leading-relaxed max-w-lg font-light">
+            No endless standups, no communication decay. We deploy native code architectures alongside pixel-perfect assets to maintain absolute deployment precision from day one.
+        </p>
+
+        <!-- Action Module -->
+        <div class="pt-4 flex items-center">
+            <a href="#" class="open-demo-trigger inline-block bg-[#ccf799] text-black text-sm font-bold tracking-wide px-8 py-4 rounded-full transition-all duration-300 hover:bg-[#bfe68a] hover:shadow-lg transform hover:-translate-y-0.5">
+                Optimize your stack
+            </a>
+        </div>
+    </div>
+
+</div>
+<!-- END: INVERTED LUXURY SPLIT -->
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
+            gsap.registerPlugin(ScrollTrigger);
+
+            gsap.utils.toArray(".gsap-counter").forEach(function (counter) {
+                var targetValue = parseInt(counter.getAttribute("data-target"), 10);
+                
+                gsap.fromTo(counter, 
+                    { textContent: 0 }, 
+                    {
+                        textContent: targetValue,
+                        duration: 2.2,
+                        ease: "power2.out",
+                        snap: { textContent: 1 }, 
+                        scrollTrigger: {
+                            trigger: "#roi-trigger-element",
+                            start: "top 80%", 
+                            toggleActions: "play none none none"
+                        }
+                    }
+                );
+            });
+        }
+    });
+</script>
+
+<section class="w-full bg-[#F4F4F4] text-black py-24 px-6 sm:px-12 lg:px-24 border-t border-zinc-200">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- FAQ HEADER -->
+        <div class="mb-16 text-left space-y-2">
+            <span class="text-xs font-bold tracking-[0.25em] uppercase text-zinc-500 block">FAQS</span>
+            <h2 class="text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-black leading-none">
+                Frequently asked <span class="italic font-serif font-light text-zinc-600">questions</span>
+            </h2>
+        </div>
+
+        <!-- FAQ TWO-COLUMN GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-16 xl:gap-x-24 items-start">
+            
+            <!-- LEFT COLUMN: CORE SERVICE & CAPABILITIES -->
+            <div class="space-y-0 w-full divide-y divide-zinc-300/80 border-t border-b border-zinc-300/80">
+                
+                <!-- FAQ 1 -->
+                <div class="faq-item group py-6">
+                    <button class="faq-trigger w-full flex justify-between items-center text-left focus:outline-none" aria-expanded="false">
+                        <span class="text-base sm:text-lg font-medium tracking-tight text-neutral-900 group-hover:text-zinc-600 transition-colors duration-200">What exactly does Square One cover under "Design & Code"?</span>
+                        <span class="faq-icon text-xl font-light text-zinc-400 ml-4 transform transition-transform duration-300 shrink-0">+</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <p class="pt-4 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
+                            Unlike traditional agencies that only hand over Figma files, Square One bridges the gap completely. We cover high-end UI/UX design, brand identity, motion graphics, and premium frontend development (including custom React, Next.js, Tailwind CSS, and Webflow deployments). You get production-ready code alongside pixel-perfect design.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="faq-item group py-6">
+                    <button class="faq-trigger w-full flex justify-between items-center text-left focus:outline-none" aria-expanded="false">
+                        <span class="text-base sm:text-lg font-medium tracking-tight text-neutral-900 group-hover:text-zinc-600 transition-colors duration-200">How do the revision cycles work?</span>
+                        <span class="faq-icon text-xl font-light text-zinc-400 ml-4 transform transition-transform duration-300 shrink-0">+</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <p class="pt-4 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
+                            We believe friction slows down growth. Revisions are continuous and systematically prioritized through your dedicated Slack channel or dashboard. Once a sprint draft is delivered, you can drop inline comments, and our nodes iterate instantly. There are no corporate protocols or extra invoices for refinement loops.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="faq-item group py-6">
+                    <button class="faq-trigger w-full flex justify-between items-center text-left focus:outline-none" aria-expanded="false">
+                        <span class="text-base sm:text-lg font-medium tracking-tight text-neutral-900 group-hover:text-zinc-600 transition-colors duration-200">What tech stacks and design frameworks do you support?</span>
+                        <span class="faq-icon text-xl font-light text-zinc-400 ml-4 transform transition-transform duration-300 shrink-0">+</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <p class="pt-4 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
+                            For design, we are native to Figma, Adobe Creative Suite, and advanced 3D tooling like Blender/Spline. On the engineering side, we specialize in high-performance Web-vitals: Next.js, React, Tailwind CSS, GSAP for premium animations, and native clean JavaScript setups.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="faq-item group py-6">
+                    <button class="faq-trigger w-full flex justify-between items-center text-left focus:outline-none" aria-expanded="false">
+                        <span class="text-base sm:text-lg font-medium tracking-tight text-neutral-900 group-hover:text-zinc-600 transition-colors duration-200">How fast can we onboard and see the first deliverables?</span>
+                        <span class="faq-icon text-xl font-light text-zinc-400 ml-4 transform transition-transform duration-300 shrink-0">+</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <p class="pt-4 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
+                            Onboarding takes less than 48 hours. Right after your kick-off call, we set up your dedicated pipeline channels, digest your existing brand guidelines or asset banks, and activate the design sprint. First-look high-fidelity concepts or wireframes are typically ready within 3 to 4 business days.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: PRICING, VALUE & OPERATION LOGISTICS -->
+            <div class="space-y-0 w-full divide-y divide-zinc-300/80 border-t border-b border-zinc-300/80 mt-12 lg:mt-0">
+                
+                <!-- FAQ 5 -->
+                <div class="faq-item group py-6">
+                    <button class="faq-trigger w-full flex justify-between items-center text-left focus:outline-none" aria-expanded="false">
+                        <span class="text-base sm:text-lg font-medium tracking-tight text-neutral-900 group-hover:text-zinc-600 transition-colors duration-200">Why is this better than hiring in-house design engineers?</span>
+                        <span class="faq-icon text-xl font-light text-zinc-400 ml-4 transform transition-transform duration-300 shrink-0">+</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <p class="pt-4 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
+                            Hiring a senior UI/UX designer and a premium frontend developer costs upwards of $200k/year combined, not including onboarding friction, benefits, and management overhead. Square One gives you a fully managed, multi-disciplinary squad (designers, copywriters, and developers) for a fraction of that cost, instantly scalable.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 6 -->
+                <div class="faq-item group py-6">
+                    <button class="faq-trigger w-full flex justify-between items-center text-left focus:outline-none" aria-expanded="false">
+                        <span class="text-base sm:text-lg font-medium tracking-tight text-neutral-900 group-hover:text-zinc-600 transition-colors duration-200">What happens if my design or deployment volume fluctuates?</span>
+                        <span class="faq-icon text-xl font-light text-zinc-400 ml-4 transform transition-transform duration-300 shrink-0">+</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <p class="pt-4 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
+                            We don't believe in "use it or lose it" retainers. Our model is built to scale alongside your product roadmap cycles. If you have a slow month, your unused operational flex budget automatically rolls over for up to 3 months, ensuring your investment is always translated directly into asset equity.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 7 -->
+                <div class="faq-item group py-6">
+                    <button class="faq-trigger w-full flex justify-between items-center text-left focus:outline-none" aria-expanded="false">
+                        <span class="text-base sm:text-lg font-medium tracking-tight text-neutral-900 group-hover:text-zinc-600 transition-colors duration-200">What is a Project Booster and when should we use it?</span>
+                        <span class="faq-icon text-xl font-light text-zinc-400 ml-4 transform transition-transform duration-300 shrink-0">+</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <p class="pt-4 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
+                            A Project Booster is an on-demand velocity inject mechanism. If you are approaching a major funding announcement, product launch, or seasonal campaign drop and need immediate short-term bandwidth, a Booster adds secondary execution nodes to your pipeline without forcing you to change your baseline subscription tier.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 8 -->
+                <div class="faq-item group py-6">
+                    <button class="faq-trigger w-full flex justify-between items-center text-left focus:outline-none" aria-expanded="false">
+                        <span class="text-base sm:text-lg font-medium tracking-tight text-neutral-900 group-hover:text-zinc-600 transition-colors duration-200">How do you ensure enterprise data security and IP rights?</span>
+                        <span class="faq-icon text-xl font-light text-zinc-400 ml-4 transform transition-transform duration-300 shrink-0">+</span>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <p class="pt-4 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
+                            100% of all code structures, source files, asset nodes, and custom elements developed by Square One are owned exclusively by you from the exact millisecond they are compiled. We operate on enterprise-grade secure internal environments and strictly adhere to non-disclosure protocols across all client ecosystems.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const faqTriggers = document.querySelectorAll(".faq-trigger");
+
+        faqTriggers.forEach(trigger => {
+            trigger.addEventListener("click", () => {
+                const item = trigger.closest(".faq-item");
+                const content = item.querySelector(".faq-content");
+                const icon = item.querySelector(".faq-icon");
+                const isExpanded = trigger.getAttribute("aria-expanded") === "true";
+
+                // Toggle logic
+                if (!isExpanded) {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    trigger.setAttribute("aria-expanded", "true");
+                    icon.textContent = "—";
+                    icon.classList.add("rotate-180");
+                } else {
+                    content.style.maxHeight = "0px";
+                    trigger.setAttribute("aria-expanded", "false");
+                    icon.textContent = "+";
+                    icon.classList.remove("rotate-180");
+                }
+            });
+        });
+    });
+</script>
+<!-- END: LUXURY OPEN-WIDTH HERO SPLIT WITH ROI MATRIX -->
+    <section id="pre-footer-cta-matrix" class="w-full bg-black text-white py-28 md:py-40 overflow-hidden border-t border-zinc-900 relative flex items-center justify-center">
+    
+    <div class="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
+        <img src="{{ asset('assets/img/services_hero1.png') }}" 
+             alt="Creative team workspace synergy texture" 
+             class="w-full h-full object-cover object-center opacity-25 brightness-125 contrast-[1.05] filter scale-[1.02]">
+        
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black"></div>
+        <div class="absolute inset-0 bg-radial-gradient from-transparent via-black/30 to-black"></div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-6 md:px-12 lg:px-16 relative z-10 text-center flex flex-col items-center justify-center space-y-12 md:space-y-16">
+        
+        <div class="space-y-6 max-w-4xl">
+            <span class="text-xs md:text-sm font-semibold tracking-[0.3em] uppercase text-zinc-400 block drop-shadow-sm">
+                Get Started Instantly
+            </span>
+            <h2 class="text-4xl sm:text-6xl md:text-[68px] lg:text-[76px] xl:text-[84px] leading-[1.05] tracking-tight font-normal text-white drop-shadow-md">
+                Ready to transform <br class="hidden sm:inline">
+                your <span class="italic font-serif font-light text-zinc-300">creative velocity?</span>
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-24 border-t border-b border-zinc-800/60 py-10 w-full max-w-3xl justify-center">
+            <div class="space-y-2 text-center">
+                <div class="text-4xl sm:text-5xl md:text-6xl font-normal tracking-tight text-white flex items-baseline justify-center drop-shadow-sm">
+                    12-24<span class="text-xl md:text-2xl text-zinc-400 font-light ml-1">hrs</span>
+                </div>
+                <p class="text-xs md:text-sm text-zinc-400 font-medium tracking-tight uppercase">Average asset delivery velocity</p>
+            </div>
+            <div class="space-y-2 text-center">
+                <div class="text-4xl sm:text-5xl md:text-6xl font-normal tracking-tight text-white drop-shadow-sm">
+                    500+
+                </div>
+                <p class="text-xs md:text-sm text-zinc-400 font-medium tracking-tight uppercase">Global enterprises scaling safely</p>
+            </div>
+        </div>
+
+        <div class="pt-2">
+            <button class="open-demo-trigger inline-flex items-center justify-center px-10 py-5 rounded-full bg-white text-black text-sm md:text-base font-semibold hover:bg-zinc-200 transition-all duration-300 hover:scale-[1.03] shadow-2xl group">
+                <span>Book a live platform tour</span>
+                <span class="ml-2.5 transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+            </button>
+        </div>
+
+    </div>
+    </section>
+    
+
+    <footer id="main-brand-footer" class="w-full bg-black text-white pt-20 pb-12 overflow-hidden border-t border-zinc-900/60">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-10 md:gap-8 lg:gap-12 pb-16 border-b border-zinc-900">
+            
+            <div class="col-span-2 md:col-span-4 lg:col-span-4 space-y-5">
+                <div class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-white"></span>
+                    <span>Square One</span>
+                </div>
+                <p class="text-xs md:text-sm text-zinc-400 leading-relaxed max-w-sm">
+                    The modern creative subscription model engineered for fast-growing enterprises, product teams, and high-velocity marketing pipelines.
+                </p>
+                <div class="pt-2 flex items-center gap-3.5 text-zinc-500">
+                    <a href="#twitter" class="hover:text-white transition text-xs">Twitter</a>
+                    <span class="text-zinc-800">•</span>
+                    <a href="#linkedin" class="hover:text-white transition text-xs">LinkedIn</a>
+                    <span class="text-zinc-800">•</span>
+                    <a href="#instagram" class="hover:text-white transition text-xs">Instagram</a>
+                </div>
+            </div>
+
+            <div class="col-span-1 md:col-span-2 lg:col-span-2 space-y-4">
+                <h4 class="text-xs font-semibold tracking-wider text-zinc-500 uppercase">Platform</h4>
+                <ul class="space-y-2.5 text-xs md:text-sm text-zinc-400">
+                    <li><a href="#capabilities" class="hover:text-white transition-colors duration-200">Capabilities</a></li>
+                    <li><a href="#how-it-works" class="hover:text-white transition-colors duration-200">How it Works</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition-colors duration-200">Pricing Models</a></li>
+                    <li><a href="#integrations" class="hover:text-white transition-colors duration-200">Integrations</a></li>
+                </ul>
+            </div>
+
+            <div class="col-span-1 md:col-span-2 lg:col-span-2 space-y-4">
+                <h4 class="text-xs font-semibold tracking-wider text-zinc-500 uppercase">Solutions</h4>
+                <ul class="space-y-2.5 text-xs md:text-sm text-zinc-400">
+                    <li><a href="#enterprise" class="hover:text-white transition-colors duration-200">Enterprise Scale</a></li>
+                    <li><a href="#growth-marketing" class="hover:text-white transition-colors duration-200">Growth Marketing</a></li>
+                    <li><a href="#product-teams" class="hover:text-white transition-colors duration-200">Product Design</a></li>
+                    <li><a href="#agencies" class="hover:text-white transition-colors duration-200">For Agencies</a></li>
+                </ul>
+            </div>
+
+            <div class="col-span-1 md:col-span-2 lg:col-span-2 space-y-4">
+                <h4 class="text-xs font-semibold tracking-wider text-zinc-500 uppercase">Resources</h4>
+                <ul class="space-y-2.5 text-xs md:text-sm text-zinc-400">
+                    <li><a href="#case-studies" class="hover:text-white transition-colors duration-200">Case Studies</a></li>
+                    <li><a href="#design-ops" class="hover:text-white transition-colors duration-200">Design Ops Guides</a></li>
+                    <li><a href="#blog" class="hover:text-white transition-colors duration-200">Journal & News</a></li>
+                    <li><a href="#careers" class="hover:text-white transition-colors duration-200">Careers</a></li>
+                </ul>
+            </div>
+
+            <div class="col-span-1 md:col-span-2 lg:col-span-2 space-y-4">
+                <h4 class="text-xs font-semibold tracking-wider text-zinc-500 uppercase">Support</h4>
+                <ul class="space-y-2.5 text-xs md:text-sm text-zinc-400">
+                    <li><a href="#contact" class="hover:text-white transition-colors duration-200">Contact Us</a></li>
+                    <li><a href="#help-center" class="hover:text-white transition-colors duration-200">Help Desk</a></li>
+                    <li><a href="#status" class="hover:text-white transition-colors duration-200">System Status</a></li>
+                    <li><a href="#security" class="hover:text-white transition-colors duration-200">Security Vault</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="pt-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-[11px] font-medium tracking-tight text-zinc-500">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <span>&copy; 2026 Square One Technologies Inc. All rights reserved.</span>
+                <span class="hidden sm:inline text-zinc-800">|</span>
+                <span class="text-zinc-600">Built for speed globally.</span>
+            </div>
+            
+            <div class="flex items-center flex-wrap gap-x-5 gap-y-2 text-zinc-500">
+                <a href="#privacy" class="hover:text-zinc-300 transition">Privacy Policy</a>
+                <a href="#terms" class="hover:text-zinc-300 transition">Terms of Service</a>
+                <a href="#cookies" class="hover:text-zinc-300 transition">Cookie Preferences</a>
+                <a href="#trust" class="hover:text-zinc-300 transition">Trust Center</a>
+            </div>
+
+        </div>
+
+    </div>
+    </footer>
+
+    <script>
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            
+          
+            const menuOpenBtn = document.getElementById("menu-open-btn");
+            const menuCloseBtn = document.getElementById("menu-close-btn");
+            const mobileMenu = document.getElementById("mobile-menu");
+            const mobileLinks = document.querySelectorAll(".mobile-nav-link");
+            const mobileFooter = document.querySelector(".mobile-nav-footer");
+
+            const demoModal = document.getElementById("demo-modal");
+            const modalCard = document.getElementById("modal-card");
+            const modalCloseBtn = document.getElementById("modal-close-btn");
+            const openDemoTriggers = document.querySelectorAll(".open-demo-trigger");
+
+            // ==========================================
+            // GSAP TIMELINE 1: MOBILE OVERLAY MENU
+            // ==========================================
+            const menuTl = gsap.timeline({ paused: true });
+            menuTl.set(mobileMenu, { display: "flex" }) 
+                  .to(mobileMenu, {
+                      opacity: 1,
+                      duration: 0.35,
+                      ease: "power2.out"
+                  })
+                  .fromTo(mobileLinks, 
+                      { y: 25, opacity: 0 }, 
+                      { y: 0, opacity: 1, stagger: 0.08, duration: 0.35, ease: "power2.out" }, 
+                      "-=0.15"
+                  )
+                  .fromTo(mobileFooter, 
+                      { y: 15, opacity: 0 }, 
+                      { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 
+                      "-=0.15"
+                  );
+
+            menuOpenBtn.addEventListener("click", () => {
+                document.body.style.overflow = "hidden";
+                menuTl.play();
+            });
+
+            menuCloseBtn.addEventListener("click", () => {
+                document.body.style.overflow = "auto";
+                menuTl.reverse();
+            });
+
+            mobileLinks.forEach(link => {
+                link.addEventListener("click", () => {
+                    document.body.style.overflow = "auto";
+                    menuTl.reverse();
+                });
+            });
+
+            // ==========================================
+            // GSAP TIMELINE 2: PREMIUM BLUR DEMO MODAL
+            // ==========================================
+            const modalTl = gsap.timeline({ paused: true });
+            modalTl.set(demoModal, { display: "flex" })
+                   .to(demoModal, {
+                       opacity: 1,
+                       duration: 0.3,
+                       ease: "power1.out"
+                   })
+                   .fromTo(modalCard, {
+                       opacity: 0,
+                       y: 35,
+                       scale: 0.96
+                   }, {
+                       opacity: 1,
+                       y: 0,
+                       scale: 1,
+                       duration: 0.4,
+                       ease: "power3.out"
+                   }, "-=0.15");
+
+            // Bind triggers to open Demo Modal gracefully
+            openDemoTriggers.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    // Agar mobile overlay open ho, toh use foran revert karein bina delay ke
+                    if (mobileMenu.style.display === "flex") {
+                        menuTl.reverse();
+                    }
+                    document.body.style.overflow = "hidden"; 
+                    modalTl.play();
+                });
+            });
+
+            // Close Modal Event
+            modalCloseBtn.addEventListener("click", () => {
+                document.body.style.overflow = "auto";
+                modalTl.reverse();
+            });
+
+            // Click outside the modal box container to dismiss look
+            demoModal.addEventListener("click", (e) => {
+                if (e.target === demoModal) {
+                    document.body.style.overflow = "auto";
+                    modalTl.reverse();
+                }
+            });
+        });
+    </script>
+   
+
+</body>
+</html>
