@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
      <link rel="stylesheet" href="{{ asset('assets/css/index.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -15,9 +17,14 @@
     
     <style>
         /* Base Theme Settings */
-        *{
-           font-family: "Montserrat", sans-serif;
+        .navbar_heading{
+        font-family: "Montserrat", sans-serif !important;
+
         }
+        *{
+           font-family: "Inter Tight", sans-serif;
+        }
+
         :root {
             --bg-black: #000000;
             --text-white: #ffffff;
@@ -69,7 +76,7 @@
     <div id="mobile-menu" class="fixed inset-0 w-full h-screen bg-black z-[999] hidden flex-col justify-between px-8 py-12 lg:hidden">
         
         <div class="flex justify-between items-center w-full">
-            <span class="text-2xl font-extrabold tracking-tight text-white">S Q U A R E  O N E</span>
+            <span class="navbar_heading text-2xl font-extrabold tracking-tight text-white">S Q U A R E  O N E</span>
             
             <button id="menu-close-btn" class="p-2 text-white hover:text-neutral-400 transition focus:outline-none" aria-label="Close Menu">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -105,7 +112,7 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center w-full gap-4 relative">
             
             <div class="text-2xl font-extrabold tracking-tight text-white cursor-pointer shrink-0">
-                S Q U A R E  O N E
+                <span class="navbar_heading">S Q U A R E  O N E</span>
             </div>
             
             <nav class="hidden lg:flex items-center space-x-6 xl:space-x-8 text-sm font-medium text-neutral-400 whitespace-nowrap overflow-hidden">

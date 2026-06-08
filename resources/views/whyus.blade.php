@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/css/index.css') }}">
     
     <!-- Tailwind CSS -->
@@ -22,9 +23,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     
     <style>
-         *{
-           font-family: "Montserrat", sans-serif;
+        .navbar_heading{
+        font-family: "Montserrat", sans-serif !important;
+
         }
+         *{
+           font-family: "Inter Tight", sans-serif;
+        }
+        
         :root {
             --bg-page: #FCFDFA; 
             --plyr-color-main: #000000;
@@ -75,7 +81,7 @@
     <!-- RESPONSIVE MOBILE NAVIGATION OVERLAY -->
     <div id="mobile-menu" class="fixed inset-0 w-full h-screen bg-black z-[999] hidden flex-col justify-between px-8 py-12 lg:hidden">
         <div class="flex justify-between items-center w-full">
-            <span class="text-2xl font-extrabold tracking-tight text-white"><a href="{{ route('home') }}">S Q U A R E  O N E</a></span>
+          <span class="navbar_heading text-2xl font-extrabold tracking-tight text-white"><a href="{{ route('home') }}">S Q U A R E  O N E</a></span>
             <button id="menu-close-btn" class="p-2 text-white hover:text-neutral-400 transition focus:outline-none" aria-label="Close Menu">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -107,7 +113,7 @@
         <div class="w-full mx-auto flex justify-between items-center gap-4 relative">
             
             <div class="text-2xl font-extrabold tracking-tight text-black cursor-pointer shrink-0">
-                <a href="{{ route('home') }}">S Q U A R E  O N E</a>
+                <a href="{{ route('home') }}" class="navbar_heading">S Q U A R E  O N E</a>
             </div>
             
             <nav class="hidden lg:flex items-center space-x-6 xl:space-x-8 text-sm font-semibold text-neutral-500 whitespace-nowrap overflow-hidden">
