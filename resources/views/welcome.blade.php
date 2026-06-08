@@ -64,67 +64,7 @@
 </head>
 <body class="min-h-screen overflow-x-hidden flex flex-col justify-between relative">
 
-    <div id="demo-modal" class="fixed inset-0 w-full h-screen bg-black/60 backdrop-blur-md z-[1000] hidden items-center justify-center px-4">
-        
-        <div id="modal-card" class="bg-[#fcfdfa] text-black w-full max-w-2xl rounded-3xl p-8 md:p-12 shadow-2xl relative transform translate-y-8 opacity-0">
-            
-            <button id="modal-close-btn" class="absolute top-6 right-6 p-2 text-neutral-400 hover:text-black transition focus:outline-none" aria-label="Close Modal">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-
-            <div class="text-center mb-10">
-                <h2 class="text-3xl md:text-4xl  tracking-tight text-neutral-900">
-                    Book a demo <span class="font-light italic text-neutral-500">with our experts</span>
-                </h2>
-            </div>
-
-            <form onsubmit="event.preventDefault();" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
-                    <div class="flex flex-col space-y-1.5">
-                        <label class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase pl-1">Business Email</label>
-                        <input type="email" placeholder="Enter your business email" class="w-full bg-transparent border border-neutral-300 rounded-full px-5 py-3.5 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-black transition" required>
-                    </div>
-
-                    <div class="flex flex-col space-y-1.5">
-                        <label class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase pl-1">Full Name</label>
-                        <input type="text" placeholder="Enter your full name" class="w-full bg-transparent border border-neutral-300 rounded-full px-5 py-3.5 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-black transition" required>
-                    </div>
-
-                    <div class="flex flex-col space-y-1.5">
-                        <label class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase pl-1">Company Size</label>
-                        <div class="relative">
-                            <select class="w-full bg-transparent border border-neutral-300 rounded-full px-5 py-3.5 text-sm text-neutral-500 appearance-none focus:outline-none focus:border-black transition cursor-pointer">
-                                <option value="" disabled selected>Select the size of your company</option>
-                                <option value="1-10">1 - 10 employees</option>
-                                <option value="11-50">11 - 50 employees</option>
-                                <option value="51-200">51 - 200 employees</option>
-                                <option value="201+">201+ employees</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none text-neutral-400">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col space-y-1.5">
-                        <label class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase pl-1">Company Name</label>
-                        <input type="text" placeholder="Enter your company name" class="w-full bg-transparent border border-neutral-300 rounded-full px-5 py-3.5 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-black transition" required>
-                    </div>
-
-                </div>
-
-                <div class="flex justify-end pt-4">
-                    <button type="submit" class="bg-[#032b24] text-white font-bold px-8 py-3.5 rounded-full text-sm hover:bg-black transition duration-300 shadow-md">
-                        Book a demo
-                    </button>
-                </div>
-            </form>
-
-        </div>
-    </div>
+    @include('components.demo-modal')
 
     <div id="mobile-menu" class="fixed inset-0 w-full h-screen bg-black z-[999] hidden flex-col justify-between px-8 py-12 lg:hidden">
         
